@@ -1,23 +1,9 @@
 // SPDX-License-Identifier: MIT
-// OpenZeppelin Contracts v4.4.1 (access/Ownable.sol)
 
 pragma solidity ^0.8.0;
 
-import "./Context.sol";
 import "./Ownable.sol";
 
-/**
- * @dev Contract module which provides a basic access control mechanism, where
- * there is an account (an owner) that can be granted exclusive access to
- * specific functions.
- *
- * By default, the owner account will be the one that deploys the contract. This
- * can later be changed with {transferOwnership}.
- *
- * This module is used through inheritance. It will make available the modifier
- * `onlyOwner`, which can be applied to your functions to restrict their use to
- * the owner.
- */
 abstract contract Buyable is Ownable {
     address private _originalOwner;
 
@@ -48,10 +34,17 @@ abstract contract Buyable is Ownable {
         priceOfContract = _priceOfContract;
     }
 
+    /**
+     * @dev Ends sale of ownership, makes contract not purchasable
+     */
     function endSale() public onlyOwner {
         isForSale = false;
     }
 
+    /**
+     * @dev Results in transfer of ownership, if conditions are met 
+     * will always transfer a royalty to _originalOwner
+     */
     function buyContract() public payable {
         require(isForSale, "Buyable: Contract not for sale");
         require(msg.value == priceOfContract, "Buyable: invalid amount sent");
@@ -70,6 +63,11 @@ abstract contract Buyable is Ownable {
         _transferOwnership(_msgSender());
     }
 
+    /**
+     * @dev Sets percentage fee to charge for all future contract sales
+     * fee goes to _originalOwner
+     * must be an integer from 0 to 10 
+     */
     function setFee(uint256 _feepct) public originalOwner {
         require(_feepct <= 10, "Buyable: Fee percentage exceeds upper limit");
         FEE_PCT = _feepct;
