@@ -37,19 +37,24 @@ getEvents = async function () {
 
     let price;
     if(buyable) {
-        unhide('buy');
+        if(await signer.getAddress() == await contract.owner()) {
+            hide('buy');
+        } else {
+            unhide('buy');
+        }
         document.getElementById('buy').innerHTML
         price = await contract.priceOfContract();
-        document.getElementById('output').innerHTML = 'For Sale: ' + buyable + ' Price: ' + price / 10**18 + ' Ether';
+        document.getElementById('output').innerHTML = 'For Sale: ' + buyable + '<br/>Price: ' + price / 10**18 + ' Ether<br/>Owner: ' + await contract.owner();
         let network = signer.provider._network.name + '.';
         if(network == 'mainnet.') {
             network = ''
         }
-        document.getElementById('output2').innerHTML = `<a href="https://${network}etherscan.io/address/${address}" target="blank">Etherscan</a>`;
+        document.getElementById('output2').innerHTML = `Always research before buying: <a href="https://${network}etherscan.io/address/${address}" target="blank">Etherscan</a>`;
 
     } else {
         document.getElementById('output').innerHTML = buyable;
         if(await signer.getAddress() == await contract.owner()) {
+            hide('buy');
             unhide('price');
             unhide('sell');
         }

@@ -14,8 +14,10 @@
   </head>
 <body>
 
-    <div style="margin-left: 40%; margin-top: 10%;">
-        <input id="contractAddress" type="text" placeholder="contract address">
+    <div style="margin-left: 30%; margin-top: 10%;">
+        <label for="contractAddress">Default contract is on Goerli network</label>
+        <br/>
+        <input id="contractAddress" type="text" placeholder="contract address" value="0x5e9EAdFfe93736fe79a9f1837e29CbAb6C6C1a0c" style="width: 40%;">
         <button id="getEvents" onclick="getEvents()">Get Info</button>
         <button id="buy" onclick="buy()">Buy Contract</button>
         <div id="output"></div>
