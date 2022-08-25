@@ -22,6 +22,12 @@ init = async function () {
 init();
 
 getEvents = async function () {
+
+    if(await signer.provider._network.name != 'goerli') {
+        alert('Must be on goerli testnet');
+        throw('Must be on goerli testnet');
+    }
+
     const address = document.getElementById('contractAddress').value;
     const contract = new ethers.Contract(address, abi, provider);
     buyable = 'string hello hi';
@@ -67,6 +73,11 @@ getEvents = async function () {
 }
 
 buy = async function () {
+    if(await signer.provider._network.name != 'goerli') {
+        alert('Must be on goerli testnet');
+        throw('Must be on goerli testnet');
+    }
+
     const address = document.getElementById('contractAddress').value;
     const contract = new ethers.Contract(address, abi, provider);
     const contractSigner = contract.connect(signer);
@@ -76,6 +87,11 @@ buy = async function () {
 }
 
 sell = async function () {
+    if(await signer.provider._network.name != 'goerli') {
+        alert('Must be on goerli testnet');
+        throw('Must be on goerli testnet');
+    }
+
     const address = document.getElementById('contractAddress').value;
     const contract = new ethers.Contract(address, abi, provider);
     const contractSigner = contract.connect(signer);
