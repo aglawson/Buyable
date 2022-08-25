@@ -1,6 +1,8 @@
 
+
 const provider = new ethers.providers.Web3Provider(window.ethereum)
 let signer;
+
 init = async function () {
     hide('buy');
     hide('sell');
@@ -8,10 +10,12 @@ init = async function () {
     await provider.send("eth_requestAccounts", []);
 
     signer = await provider.getSigner()
+    if(await signer.provider._network.name != 'goerli') {
+        alert('Must be on goerli testnet');
+        throw('Must be on goerli testnet');
+    }
 
     document.getElementById('connect').innerHTML = 'Connected!';
-
-
 
 }
 
@@ -87,5 +91,19 @@ function hide(element)  {
 
 function unhide(element) {
     document.getElementById(element).style.visibility="visible";  
+}
+
+// Force page refreshes on network changes
+{
+    // The "any" network will allow spontaneous network changes
+    const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+    provider.on("network", (newNetwork, oldNetwork) => {
+        // When a Provider makes its initial connection, it emits a "network"
+        // event with a null oldNetwork along with the newNetwork. So, if the
+        // oldNetwork exists, it represents a changing network
+        if (oldNetwork) {
+            window.location.reload();
+        }
+    });
 }
 
