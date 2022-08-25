@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
+    <title>Buyable.sol</title>
+    <button id="connect" style="margin-top:0%; margin-left:90%;" onclick="init()">Connect Wallet</button>
+
+    <h1 style="margin-top: -1.6%;">Buyable.sol</h1>
+    <a href="https://headlessdev.medium.com/smart-contracts-are-now-buyable-848410038201" target="_blank"><button>About</button></a>
+    <a href="https://github.com/aglawson/Buyable" target="_blank"><button>Source Code</button></a>
+
+  </head>
+<body>
+
+    <div style="margin-left: 40%; margin-top: 10%;">
+        <input id="contractAddress" type="text" placeholder="contract address">
+        <button id="getEvents" onclick="getEvents()">Get Info</button>
+        <button id="buy" onclick="buy()">Buy Contract</button>
+        <div id="output"></div>
+        <div id="output2"></div>
+
+        <br/>
+        <br/>
+        <input type="text" id="price" placeholder="Price in Ether">
+        <button id="sell" onclick="sell()">Sell Contract</button>
+
+    </div>
+
+
+
+
+    <script src="./abi.js"></script>
+    <script src="./main.js"></script>
+
+</body>
+
+</html>

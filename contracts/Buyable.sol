@@ -7,7 +7,7 @@ import "./Ownable.sol";
 abstract contract Buyable is Ownable {
     address private _originalOwner;
 
-    bool public isForSale;
+    bool public isBuyable;
 
     uint256 public priceOfContract;
     uint256 public feePct;
@@ -35,7 +35,7 @@ abstract contract Buyable is Ownable {
      */
     function sellContract(uint256 _priceOfContract) public onlyOwner {
         require(_priceOfContract >= 100, "Buyable: Proposed price must be higher than 100 Wei");
-        isForSale = true;
+        isBuyable = true;
         priceOfContract = _priceOfContract;
 
         emit listed(_msgSender(), address(this), _priceOfContract);
@@ -45,7 +45,7 @@ abstract contract Buyable is Ownable {
      * @dev Ends sale of ownership, makes contract not purchasable
      */
     function endSale() public onlyOwner {
-        isForSale = false;
+        isBuyable = false;
 
         emit unlisted(_msgSender(), address(this));
     }
@@ -55,12 +55,12 @@ abstract contract Buyable is Ownable {
      * will always transfer a royalty to _originalOwner
      */
     function buyContract() public payable {
-        require(isForSale, "Buyable: Contract not for sale");
+        require(isBuyable, "Buyable: Contract not for sale");
         require(msg.value == priceOfContract, "Buyable: invalid amount sent");
 
         address oldOwner = owner();
 
-        isForSale = false;
+        isBuyable = false;
         priceOfContract = 0;
 
         uint256 fee = (msg.value / 100) * feePct;
@@ -84,5 +84,9 @@ abstract contract Buyable is Ownable {
     function setFee(uint256 _feepct) public originalOwner {
         require(_feepct <= 10, "Buyable: Fee percentage exceeds upper limit");
         feePct = _feepct;
+    }
+
+    function buyable() external view returns(bool) {
+        return isBuyable;
     }
 }
