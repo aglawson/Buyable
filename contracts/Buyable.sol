@@ -10,7 +10,11 @@ abstract contract Buyable is Ownable {
     bool public isForSale;
 
     uint256 public priceOfContract;
-    uint256 public FEE_PCT;
+    uint256 public feePct;
+
+    event listed(address seller, address contractAddress, uint256 price);
+    event bought(address seller, address buyer, address contractAddress, uint256 price);
+    event unlisted(address seller, address contractAddress);
 
     /**
      * @dev Initializes the contract setting the deployer as the original owner.
@@ -27,11 +31,14 @@ abstract contract Buyable is Ownable {
     /**
      * @dev Makes ownership of contract purchasable 
      * price is in Wei => 1 * 10^-18 ETH
+     * price must be higher than 100 Wei to prevent percentage calculation errors
      */
     function sellContract(uint256 _priceOfContract) public onlyOwner {
-        require(_priceOfContract >= 1000000000000, "Buyable: Proposed price is too low");
+        require(_priceOfContract >= 100, "Buyable: Proposed price must be higher than 100 Wei");
         isForSale = true;
         priceOfContract = _priceOfContract;
+
+        emit listed(_msgSender(), address(this), _priceOfContract);
     }
 
     /**
@@ -39,6 +46,8 @@ abstract contract Buyable is Ownable {
      */
     function endSale() public onlyOwner {
         isForSale = false;
+
+        emit unlisted(_msgSender(), address(this));
     }
 
     /**
@@ -49,10 +58,12 @@ abstract contract Buyable is Ownable {
         require(isForSale, "Buyable: Contract not for sale");
         require(msg.value == priceOfContract, "Buyable: invalid amount sent");
 
+        address oldOwner = owner();
+
         isForSale = false;
         priceOfContract = 0;
 
-        uint256 fee = (msg.value / 100) * FEE_PCT;
+        uint256 fee = (msg.value / 100) * feePct;
 
         (bool success,) = owner().call{value: msg.value - fee}("");
         require(success, 'Transfer fail');
@@ -61,6 +72,8 @@ abstract contract Buyable is Ownable {
         require(success2, 'Transfer fail');
 
         _transferOwnership(_msgSender());
+
+        emit bought(oldOwner, _msgSender(), address(this), msg.value);
     }
 
     /**
@@ -70,6 +83,6 @@ abstract contract Buyable is Ownable {
      */
     function setFee(uint256 _feepct) public originalOwner {
         require(_feepct <= 10, "Buyable: Fee percentage exceeds upper limit");
-        FEE_PCT = _feepct;
+        feePct = _feepct;
     }
 }
