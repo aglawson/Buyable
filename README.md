@@ -1,3 +1,6 @@
+# Buyable.sol
+The Buyable library contract allows developers to sell ownership of their smart contract. 
+
 # Latest Audit Results
 
 ```
