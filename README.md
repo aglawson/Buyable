@@ -1,6 +1,11 @@
 # Buyable.sol
 The Buyable library contract allows developers to sell ownership of their smart contract. 
 
+# Potential Improvements
+1. Enable ERC20
+2. Price in terms of USD using an oracle -> creates external dependency which may not be secure/future proof
+3. Tokenize ownership of contract as an ERC721 -> requires use of ERC721 libraries which will enlarge contract size unnecessarily
+
 # Latest Audit Results
 
 ```
